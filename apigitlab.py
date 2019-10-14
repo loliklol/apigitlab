@@ -68,13 +68,16 @@ class apigitlab:
       print("_______")
     
     def get_branch(self,id,branch):
-      r = requests.get(self.adr+ str(id) +'/repository/branches/'+ branch , params=self.token_i)
-      ret=r.json()
-      #print(ret)
-      if ret.get('message'):
-          return ret
-      else:    
-       return ret['commit']['id'] 
+       self.token_i['per_page']=100
+       r = requests.get(self.adr+ str(id) +'/repository/branches/' , params=self.token_i)
+       ret=r.json()
+       for i in ret:
+           
+           if branch==i.get('name'):
+             temp=i.get('commit')
+             return temp.get('id')  
+       message={'message':'404 Branch Not Found'}
+       return message  
       
     def get_reg_con(self,id):
       self.token_i['per_page']=20
